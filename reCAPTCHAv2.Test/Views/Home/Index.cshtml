@@ -1,0 +1,59 @@
+﻿@model reCAPTCHAv2.Test.Models.ContactFormModel
+@{
+    ViewData["Title"] = "reCAPTCHA Test Form";
+}
+
+<div class="text-center">
+    <h1 class="display-4">reCAPTCHA Test Form</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        <form asp-action="Index" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Name</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">Email</label>
+                <input asp-for="Email" class="form-control" type="email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Message" class="form-label">Message</label>
+                <textarea asp-for="Message" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Message" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <recaptcha></recaptcha>
+                @if (!ViewContext.ModelState.IsValid && ViewContext.ModelState[""].Errors.Count > 0)
+                {
+                    <span class="text-danger">@ViewContext.ModelState[""].Errors.FirstOrDefault()?.ErrorMessage</span>
+                }
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
